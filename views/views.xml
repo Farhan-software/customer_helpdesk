@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!--helpdesk.ticket-->
+        <record id="view_helpdesk_ticket_search" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.search</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Subject"/>
+                    <field name="customer_id"/>
+                    <field name="team_id"/>
+                    <filter name="my_tickets" string="My Tickets" domain="[('user_id', '=', uid)]"/>
+                    <filter name="high_priority" string="High Priority" domain="[('priority', '=', 'high')]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="team" string="Team" context="{'group_by':'team_id'}"/>
+                        <filter name="category" string="Category" context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_ticket_tree" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.tree</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="customer_id"/>
+                    <field name="priority"/>
+                    <field name="category_id"/>
+                    <field name="user_id" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_ticket_kanban" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.kanban</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="priority"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_header">
+                                    <field name="name"/>
+                                </div>
+                                <div class="o_kanban_details">
+                                    <field name="customer_id"/>
+                                    <br/>
+                                    <field name="category_id"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_ticket_form" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="active" invisible="1"/>
+                        <button name="action_mark_open" type="object" string="Mark Open" states="draft"/>
+                        <button name="action_mark_pending" type="object" string="Mark Pending" states="open"/>
+                        <button name="action_set_to_draft" type="object" string="Set to Draft" states="open,pending,resolved,closed"/>
+                        <button name="action_mark_resolved" type="object" string="Mark Resolved" states="open,pending"/>
+                        <button name="action_close_ticket" type="object" string="Close" states="resolved"/>
+                        <button type="object" name="toggle_active" class="oe_highlight" attrs="{'invisible': [('active', '=', True)]}">
+                            Activate
+                        </button>
+                        <button type="object" name="toggle_active" attrs="{'invisible': [('active', '=', False)]}">
+                            Deactivate
+                        </button>
+                        <button name="action_assign_to_me" type="object" string="Assign to Me" class="oe_highlight"/>
+                        <statusbar>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,open,pending,resolved"/>
+                        </statusbar>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="customer_id"/>
+                            <field name="customer_name" readonly="1"/>
+                            <field name="customer_email" readonly="1"/>
+                            <field name="customer_phone" readonly="1"/>
+                            <field name="team_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="priority"/>
+                            <field name="category_id"/>
+                        </group>
+                        <notebook>
+                            <page name="description" string="Description">
+                                <field name="description"/>
+                            </page>
+                            <page name="attachment" string="Attachment">
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_helpdesk_ticket" model="ir.actions.act_window">
+            <field name="name">Helpdesk Tickets</field>
+            <field name="res_model">helpdesk.ticket</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <menuitem id="menu_helpdesk_root" name="Helpdesk"/>
+        <menuitem id="menu_helpdesk_tickets" name="Tickets" parent="menu_helpdesk_root" action="action_helpdesk_ticket"/>
+
+
+        <!--helpdesk team-->
+        <record id="view_helpdesk_team_search" model="ir.ui.view">
+            <field name="name">helpdesk.team.search</field>
+            <field name="model">helpdesk.team</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_team_tree" model="ir.ui.view">
+            <field name="name">helpdesk.team.tree</field>
+            <field name="model">helpdesk.team</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_team_form" model="ir.ui.view">
+            <field name="name">helpdesk.team.form</field>
+            <field name="model">helpdesk.team</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_helpdesk_team" model="ir.actions.act_window">
+            <field name="name">Helpdesk Teams</field>
+            <field name="res_model">helpdesk.team</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--helpdesk category-->
+        <record id="view_helpdesk_category_search" model="ir.ui.view">
+            <field name="name">helpdesk.category.search</field>
+            <field name="model">helpdesk.category</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_category_tree" model="ir.ui.view">
+            <field name="name">helpdesk.category.tree</field>
+            <field name="model">helpdesk.category</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_category_form" model="ir.ui.view">
+            <field name="name">helpdesk.category.form</field>
+            <field name="model">helpdesk.category</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_helpdesk_category" model="ir.actions.act_window">
+            <field name="name">Helpdesk Categories</field>
+            <field name="res_model">helpdesk.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_helpdesk_config" name="Configuration" parent="menu_helpdesk_root"/>
+        <menuitem id="menu_helpdesk_teams" name="Teams" parent="menu_helpdesk_config" action="action_helpdesk_team"/>
+        <menuitem id="menu_helpdesk_categories" name="Categories" parent="menu_helpdesk_config" action="action_helpdesk_category"/>
+
+
+        <record id="helpdesk_report_wizard_view" model="ir.ui.view">
+            <field name="name">ticket.report.wizard.view.form</field>
+            <field name="model">ticket.report.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                    <footer>
+                        <button name="generate_report" type="object" string="Generate Report" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_helpdesk_report_wizard" model="ir.actions.act_window">
+            <field name="name">Helpdesk Report</field>
+            <field name="res_model">ticket.report.wizard</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="helpdesk_report_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem id="menu_helpdesk_reports" name="Reports" parent="menu_helpdesk_root"/>
+        <menuitem id="menu_helpdesk_ticket_report" name="Ticket Report" parent="menu_helpdesk_reports" action="action_helpdesk_report_wizard"/>
+
+
+    </data>
+</odoo>

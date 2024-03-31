@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_helpdesk_ticket_report" model="ir.actions.report">
+            <field name="name">Helpdesk Ticket Report (Date Range)</field>
+            <field name="model">ticket.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">customer_helpdesk.ticket_report</field>
+            <field name="report_file">customer_helpdesk.ticket_report</field>
+        </record>
+
+        <template id="ticket_report">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page container">
+                        <h2>Helpdesk Tickets:<span t-esc="date_from"/> to <span t-esc="date_to"/>
+                        </h2>
+                        <p>Total Tickets: <span t-esc="tickets_count"/></p>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Subject</th>
+                                    <th>Customer</th>
+                                    <th>Created On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="tickets" t-as="ticket">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="ticket['ticket']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="ticket['subject']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="ticket['customer']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="ticket['date']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

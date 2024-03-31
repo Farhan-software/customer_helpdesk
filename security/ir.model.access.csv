@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+helpdesk_ticket_user_rule,customer_helpdesk.helpdesk_ticket_user_rule,model_helpdesk_ticket,base.group_user,1,1,1,1
+
+helpdesk_team_user_rule,Helpdesk Team: Base User,model_helpdesk_team,base.group_user,1,1,1,1
+helpdesk_category_user_rule,Helpdesk category: Base User,model_helpdesk_category,base.group_user,1,1,1,1
+
+
+helpdesk_helpdesk_report_wizard_user_rule,Helpdesk Report: Base User,model_ticket_report_wizard,base.group_user,1,1,1,1
